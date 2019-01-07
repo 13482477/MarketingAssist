@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">营销助手</string>
+    <string name="text_config">请确保设置设置已打开</string>
+    <string name="button_go">GO</string>
+</resources>
