@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">营销助手</string>
-    <string name="text_config">请确保设置设置已打开</string>
-    <string name="button_go">GO</string>
+    <string name="label_go_config">去设置</string>
+    <string name="button_go_config">GO</string>
+    <string name="accessibility_desc">des</string>
 </resources>
