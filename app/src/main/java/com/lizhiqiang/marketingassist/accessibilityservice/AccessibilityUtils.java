@@ -7,6 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class AccessibilityUtils {
 
@@ -31,7 +35,7 @@ public class AccessibilityUtils {
         for (Field field : fields) {
             field.setAccessible(true);
             try {
-                if (Modifier.isStatic(field.getModifiers()) && StringUtils.startsWith(field.getName(), "ACTION_") &&  field.getType() == int.class && field.getInt(AccessibilityNodeInfo.AccessibilityAction.class) == value) {
+                if (Modifier.isStatic(field.getModifiers()) && StringUtils.startsWith(field.getName(), "ACTION_") && field.getType() == int.class && field.getInt(AccessibilityNodeInfo.AccessibilityAction.class) == value) {
                     return field.getName();
                 }
             } catch (IllegalAccessException e) {
@@ -42,6 +46,32 @@ public class AccessibilityUtils {
         return null;
     }
 
+    private static String getHierarchyText(AccessibilityNodeInfo nodeInfo, ArrayList<Integer> indexes) {
+        String result = "";
+        result += "indexes=[" + StringUtils.join(indexes, "|") + "];";
+        result += "className=" + nodeInfo.getClassName() + ";";
+        result += "textName=" + nodeInfo.getText() + ";";
+        result += "\n";
 
+        for (int i = 0; i < nodeInfo.getChildCount(); i++) {
+            ArrayList<Integer> indexes2 = (ArrayList<Integer>) indexes.clone();
+            indexes2.add(i);
+            result += getHierarchyText(nodeInfo.getChild(i), indexes2);
+        }
+        return result;
+    }
+
+//    private static String getPrefix(int level) {
+//        String result = "";
+//        for (int i = 0; i < level; i++) {
+//            result += "—";
+//        }
+//        return result;
+//    }
+
+    public static void printHierarchy(AccessibilityNodeInfo nodeInfo) {
+        String result = getHierarchyText(nodeInfo, new ArrayList<Integer>());
+        System.out.print("\n" + result);
+    }
 
 }
