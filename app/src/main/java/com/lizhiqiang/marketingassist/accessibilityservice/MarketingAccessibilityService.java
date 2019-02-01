@@ -2,8 +2,10 @@ package com.lizhiqiang.marketingassist.accessibilityservice;
 
 import android.accessibilityservice.AccessibilityService;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lizhiqiang.marketingassist.accessibilityservice.context.AccessibilityContext;
@@ -39,13 +41,13 @@ public class MarketingAccessibilityService extends AccessibilityService {
     }
 
     private void logSomeThing(AccessibilityEvent event) {
+//        Log.i("hello", "packageName=" + event.getPackageName() + ";" +
+//                "eventName=" + AccessibilityUtils.getAccessibilityEventNameByValue(event.getEventType()) + ";" +
+//                "actionName=" + AccessibilityUtils.getAccessibilityActionName(event.getAction()) + ";" +
+//                "actionValue=" + event.getAction() + ";" +
+//                "className=" + this.getRootInActiveWindow().getClassName() + ";");
         if (AccessibilityEvent.TYPE_VIEW_CLICKED == event.getEventType()) {
-//            Log.i("hello", "packageName=" + event.getPackageName() + ";" +
-//                    "eventName=" + AccessibilityUtils.getAccessibilityEventNameByValue(event.getEventType()) + ";" +
-//                    "actionName=" + AccessibilityUtils.getAccessibilityActionName(event.getAction()) + ";" +
-//                    "actionValue=" + event.getAction() + ";" +
-//                    "className=" + this.getRootInActiveWindow().getClassName() + ";");
-            AccessibilityUtils.printHierarchy(this.getRootInActiveWindow());
+//            AccessibilityUtils.printHierarchy(this.getRootInActiveWindow());
 //            Log.i("hello", this.getRootInActiveWindow().getChild(1).getChild(1).getText().toString());
 //            Log.i("hello", this.getRootInActiveWindow().getChild(1).isClickable() + "");
 //            this.getRootInActiveWindow().getChild(1).performAction(AccessibilityNodeInfo.ACTION_CLICK);
@@ -59,13 +61,15 @@ public class MarketingAccessibilityService extends AccessibilityService {
             AccessibilityContext.getInstance().setPosition(WechatPosition.CONTACTS);
         } else if (this.inDiscover()) {
             AccessibilityContext.getInstance().setPosition(WechatPosition.DISCOVER);
+        } else if (this.inMe()) {
+            AccessibilityContext.getInstance().setPosition(WechatPosition.ME);
         } else {
             AccessibilityContext.getInstance().setPosition(WechatPosition.UNKNOWN);
         }
     }
 
     private boolean inChats() {
-        AccessibilityNodeInfo nodeInfo = AccessibilityNodeParser.getNodeByIndexPath(this.getRootInActiveWindow(), new int[]{0, 5, 0, 0});
+        AccessibilityNodeInfo nodeInfo = AccessibilityNodeParser.getNodeByIndexPath(this.getRootInActiveWindow(), new int[]{5, 0, 0});
         if (nodeInfo == null) {
             return false;
         }
@@ -81,7 +85,7 @@ public class MarketingAccessibilityService extends AccessibilityService {
     }
 
     private boolean inContacts() {
-        AccessibilityNodeInfo nodeInfo = AccessibilityNodeParser.getNodeByIndexPath(this.getRootInActiveWindow(), new int[]{0, 5, 0, 0});
+        AccessibilityNodeInfo nodeInfo = AccessibilityNodeParser.getNodeByIndexPath(this.getRootInActiveWindow(), new int[]{5, 0, 0});
         if (nodeInfo == null) {
             return false;
         }
@@ -97,7 +101,7 @@ public class MarketingAccessibilityService extends AccessibilityService {
     }
 
     private boolean inDiscover() {
-        AccessibilityNodeInfo nodeInfo = AccessibilityNodeParser.getNodeByIndexPath(this.getRootInActiveWindow(), new int[]{0, 5, 0, 0});
+        AccessibilityNodeInfo nodeInfo = AccessibilityNodeParser.getNodeByIndexPath(this.getRootInActiveWindow(), new int[]{5, 0, 0});
         if (nodeInfo == null) {
             return false;
         }
@@ -107,6 +111,21 @@ public class MarketingAccessibilityService extends AccessibilityService {
         }
 
         if (StringUtils.startsWith(nodeInfo.getText(), "Discover")) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean inMe() {
+        AccessibilityNodeInfo nodeInfo5 = AccessibilityNodeParser.getNodeByIndexPath(this.getRootInActiveWindow(), new int[]{5});
+        AccessibilityNodeInfo nodeInfo50 = AccessibilityNodeParser.getNodeByIndexPath(this.getRootInActiveWindow(), new int[]{5, 0});
+        AccessibilityNodeInfo nodeInfo500 = AccessibilityNodeParser.getNodeByIndexPath(this.getRootInActiveWindow(), new int[]{5, 0, 0});
+
+        if (nodeInfo5 != null &&
+                ViewGroup.class.getName().equals(nodeInfo5.getClassName()) &&
+                nodeInfo50 != null &&
+                RelativeLayout.class.getName().equals(nodeInfo50.getClassName()) &&
+                nodeInfo500 == null) {
             return true;
         }
         return false;
