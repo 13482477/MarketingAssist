@@ -47,10 +47,15 @@ public class AccessibilityUtils {
     }
 
     private static String getHierarchyText(AccessibilityNodeInfo nodeInfo, ArrayList<Integer> indexes) {
+        if (nodeInfo == null) {
+            return "";
+        }
+
         String result = "";
         result += "indexes=[" + StringUtils.join(indexes, "|") + "];";
         result += "className=" + nodeInfo.getClassName() + ";";
         result += "textName=" + nodeInfo.getText() + ";";
+        result += "clickable=" + nodeInfo.isClickable();
         result += "\n";
 
         for (int i = 0; i < nodeInfo.getChildCount(); i++) {
