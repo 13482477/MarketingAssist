@@ -20,7 +20,7 @@
             android:exported="true"
             android:label="营销助手"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-            android:process=":BackgroundService">
+            >
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>

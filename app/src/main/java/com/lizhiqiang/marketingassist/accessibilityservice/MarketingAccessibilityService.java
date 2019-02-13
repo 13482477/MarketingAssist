@@ -5,14 +5,19 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.lizhiqiang.marketingassist.Main;
 import com.lizhiqiang.marketingassist.accessibilityservice.context.AccessibilityContext;
 import com.lizhiqiang.marketingassist.accessibilityservice.context.WechatPosition;
+import com.lizhiqiang.marketingassist.accessibilityservice.model.Task;
+import com.lizhiqiang.marketingassist.accessibilityservice.model.TaskStep;
+import com.lizhiqiang.marketingassist.accessibilityservice.model.WechatAction;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,16 +26,41 @@ public class MarketingAccessibilityService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
+        AccessibilityContext.getInstance().setAccessibilityEnable(true);
     }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        if (!this.isWechatApp(event)) {
-            Log.i("info", "return");
+//        if (!this.isWechatApp(event)) {
+//            return;
+//        }
+        this.logSomeThing(event);
+//        this.locate(event);
+
+        Task task = AccessibilityContext.getInstance().getTaskQueue().peek();
+        if (task == null) {
             return;
         }
-        this.logSomeThing(event);
-        this.locate(event);
+
+        TaskStep step = task.getStepQueue().peek();
+        if (step == null) {
+            return;
+        }
+
+        if (!step.getPackageCriteria().contains(event.getPackageName())) {
+            return;
+        }
+
+        if (!step.getEventCriteria().contains(event.getEventType())) {
+            return;
+        }
+
+        switch (step.getAction()) {
+            case ClickDiscover:
+                AccessibilityNodeInfo button = this.buttonDiscover();
+                button.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
+
 
         Log.i("position", "position=" + AccessibilityContext.getInstance().getPosition());
 
@@ -44,7 +74,7 @@ public class MarketingAccessibilityService extends AccessibilityService {
 
     @Override
     public void onInterrupt() {
-
+        AccessibilityContext.getInstance().setAccessibilityEnable(false);
     }
 
     private boolean isWechatApp(AccessibilityEvent event) {
@@ -59,6 +89,7 @@ public class MarketingAccessibilityService extends AccessibilityService {
                 "className=" + (this.getRootInActiveWindow() == null ? "null" : this.getRootInActiveWindow().getClassName()) + ";");
 
         if (AccessibilityEvent.TYPE_VIEW_CLICKED == event.getEventType() ||
+                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED == event.getEventType() ||
                 (AccessibilityContext.getInstance().getPosition() == WechatPosition.UNKNOWN && AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED == event.getEventType())) {
             AccessibilityUtils.printHierarchy(this.getRootInActiveWindow());
         }
@@ -211,7 +242,7 @@ public class MarketingAccessibilityService extends AccessibilityService {
     }
 
     private AccessibilityNodeInfo buttonDiscover() {
-        int[] coordinate = this.needMask() ? new int[]{0, 0, 3} : new int[]{0, 3};
+        int[] coordinate = new int[]{0, 3};
         return AccessibilityNodeParser.getNodeByCoordinate(this.getRootInActiveWindow(), coordinate);
     }
 
