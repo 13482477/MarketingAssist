@@ -58,7 +58,11 @@ public class MarketingAccessibilityService extends AccessibilityService {
         switch (step.getAction()) {
             case ClickDiscover:
                 AccessibilityNodeInfo button = this.buttonDiscover();
-                button.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                if (button != null) {
+                    button.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                }
+            default:
+                break;
         }
 
 
