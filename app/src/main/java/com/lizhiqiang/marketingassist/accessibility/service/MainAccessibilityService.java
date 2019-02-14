@@ -24,8 +24,6 @@ public class MainAccessibilityService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        this.locate(event);
-        this.logSomeThing(event);
         Log.i("position", "position=" + AccessibilityContext.getInstance().getPosition());
 
         Task task = AccessibilityContext.getInstance().getTaskQueue().peek();
@@ -45,6 +43,9 @@ public class MainAccessibilityService extends AccessibilityService {
         if (!step.getEventCriteria().contains(event.getEventType())) {
             return;
         }
+
+        this.locate(event);
+        this.logSomeThing(event);
 
         if (step.getAction() == WechatAction.ClickDiscover) {
             task.getStepQueue().poll();
