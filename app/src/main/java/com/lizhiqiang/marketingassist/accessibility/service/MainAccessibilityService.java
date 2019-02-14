@@ -47,31 +47,26 @@ public class MainAccessibilityService extends AccessibilityService {
         this.locate(event);
         this.logSomeThing(event);
 
-        if (step.getAction() == WechatAction.ClickDiscover) {
-            task.getStepQueue().poll();
-            AccessibilityNodeInfo button = this.buttonDiscover();
-            if (button != null) {
-                button.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            }
-        } else if (step.getAction() == WechatAction.ClickMoments) {
-            AccessibilityNodeInfo button = this.buttonMoments();
-            if (button != null) {
-                button.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            }
-        } else {
-            return;
+        this.interval();
+        step.doAction(this, event);
+
+        task.getStepQueue().poll();
+        if (task.getStepQueue().isEmpty()) {
+            AccessibilityContext.getInstance().getTaskQueue().poll();
         }
-//        if (AccessibilityEvent.TYPE_VIEW_CLICKED == event.getEventType() && WechatPosition.DISCOVER == AccessibilityContext.getInstance().getPosition()) {
-//            AccessibilityNodeInfo buttonChats = AccessibilityNodeParser.getClickableNodeByTextName(this.getRootInActiveWindow(), "Chats");
-//            if (buttonChats != null) {
-//                buttonChats.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-//            }
-//        }
     }
 
     @Override
     public void onInterrupt() {
         AccessibilityContext.getInstance().setAccessibilityEnable(false);
+    }
+
+    private void interval() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void logSomeThing(AccessibilityEvent event) {
@@ -102,28 +97,4 @@ public class MainAccessibilityService extends AccessibilityService {
         }
     }
 
-    private AccessibilityNodeInfo buttonChats() {
-        int[] coordinate = new int[]{0, 1};
-        return AccessibilityNodeParser.getNodeByCoordinate(this.getRootInActiveWindow(), coordinate);
-    }
-
-    private AccessibilityNodeInfo buttonContacts() {
-        int[] coordinate = new int[]{0, 2};
-        return AccessibilityNodeParser.getNodeByCoordinate(this.getRootInActiveWindow(), coordinate);
-    }
-
-    private AccessibilityNodeInfo buttonDiscover() {
-        int[] coordinate = new int[]{0, 3};
-        return AccessibilityNodeParser.getNodeByCoordinate(this.getRootInActiveWindow(), coordinate);
-    }
-
-    private AccessibilityNodeInfo buttonMe() {
-        int[] coordinate = new int[]{0, 4};
-        return AccessibilityNodeParser.getNodeByCoordinate(this.getRootInActiveWindow(), coordinate);
-    }
-
-    private AccessibilityNodeInfo buttonMoments() {
-        int[] coordinate = new int[]{0, 0, 3, 0};
-        return AccessibilityNodeParser.getNodeByCoordinate(this.getRootInActiveWindow(), coordinate);
-    }
 }

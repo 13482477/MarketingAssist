@@ -1,9 +1,12 @@
 package com.lizhiqiang.marketingassist.accessibility.task;
 
+import android.accessibilityservice.AccessibilityService;
+import android.view.accessibility.AccessibilityEvent;
+
 import java.util.HashSet;
 import java.util.Set;
 
-public class TaskStep {
+public abstract class TaskStep {
 
     private Set<String> packageCriteria = new HashSet<>();
 
@@ -12,8 +15,6 @@ public class TaskStep {
     private Task task;
 
     private int index;
-
-    private WechatAction action;
 
     public Task getTask() {
         return task;
@@ -31,14 +32,6 @@ public class TaskStep {
         this.index = index;
     }
 
-    public WechatAction getAction() {
-        return action;
-    }
-
-    public void setAction(WechatAction action) {
-        this.action = action;
-    }
-
     public Set<String> getPackageCriteria() {
         return packageCriteria;
     }
@@ -54,4 +47,6 @@ public class TaskStep {
     public void setEventCriteria(Set<Integer> eventCriteria) {
         this.eventCriteria = eventCriteria;
     }
+
+    public abstract void doAction(AccessibilityService context, AccessibilityEvent event);
 }

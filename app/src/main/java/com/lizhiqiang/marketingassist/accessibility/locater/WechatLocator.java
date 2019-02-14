@@ -153,5 +153,30 @@ public class WechatLocator {
         return false;
     }
 
+    public static AccessibilityNodeInfo buttonChats(AccessibilityService context) {
+        int[] coordinate = new int[]{0, 1};
+        return AccessibilityNodeParser.getNodeByCoordinate(context.getRootInActiveWindow(), coordinate);
+    }
+
+    public static AccessibilityNodeInfo buttonContacts(AccessibilityService context) {
+        int[] coordinate = new int[]{0, 2};
+        return AccessibilityNodeParser.getNodeByCoordinate(context.getRootInActiveWindow(), coordinate);
+    }
+
+    public static AccessibilityNodeInfo buttonDiscover(AccessibilityService context) {
+        int[] coordinate = new int[]{0, 3};
+        return AccessibilityNodeParser.getNodeByCoordinate(context.getRootInActiveWindow(), coordinate);
+    }
+
+    public static AccessibilityNodeInfo buttonMe(AccessibilityService context) {
+        int[] coordinate = new int[]{0, 4};
+        return AccessibilityNodeParser.getNodeByCoordinate(context.getRootInActiveWindow(), coordinate);
+    }
+
+    public static AccessibilityNodeInfo buttonMoments(AccessibilityService context) {
+        int[] coordinate = new int[]{0, 0, 3, 0};
+        return AccessibilityNodeParser.getNodeByCoordinate(context.getRootInActiveWindow(), coordinate);
+    }
+
 
 }
