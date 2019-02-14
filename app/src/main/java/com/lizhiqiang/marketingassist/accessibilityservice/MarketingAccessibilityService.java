@@ -41,6 +41,7 @@ public class MarketingAccessibilityService extends AccessibilityService {
         Task task = AccessibilityContext.getInstance().getTaskQueue().peek();
         if (task == null) {
             return;
+
         }
 
         TaskStep step = task.getStepQueue().peek();
