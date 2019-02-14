@@ -35,7 +35,8 @@ public class MarketingAccessibilityService extends AccessibilityService {
 //            return;
 //        }
         this.logSomeThing(event);
-//        this.locate(event);
+        this.locate(event);
+        Log.i("position", "position=" + AccessibilityContext.getInstance().getPosition());
 
         Task task = AccessibilityContext.getInstance().getTaskQueue().peek();
         if (task == null) {
@@ -55,19 +56,20 @@ public class MarketingAccessibilityService extends AccessibilityService {
             return;
         }
 
-        switch (step.getAction()) {
-            case ClickDiscover:
-                AccessibilityNodeInfo button = this.buttonDiscover();
-                if (button != null) {
-                    button.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                }
-            default:
-                break;
+        if (step.getAction() == WechatAction.ClickDiscover) {
+            task.getStepQueue().poll();
+            AccessibilityNodeInfo button = this.buttonDiscover();
+            if (button != null) {
+                button.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            }
+        } else if (step.getAction() == WechatAction.ClickMoments) {
+            AccessibilityNodeInfo button = this.buttonMoments();
+            if (button != null) {
+                button.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            }
+        } else {
+            return;
         }
-
-
-        Log.i("position", "position=" + AccessibilityContext.getInstance().getPosition());
-
 //        if (AccessibilityEvent.TYPE_VIEW_CLICKED == event.getEventType() && WechatPosition.DISCOVER == AccessibilityContext.getInstance().getPosition()) {
 //            AccessibilityNodeInfo buttonChats = AccessibilityNodeParser.getClickableNodeByTextName(this.getRootInActiveWindow(), "Chats");
 //            if (buttonChats != null) {
@@ -236,12 +238,12 @@ public class MarketingAccessibilityService extends AccessibilityService {
     }
 
     private AccessibilityNodeInfo buttonChats() {
-        int[] coordinate = this.needMask() ? new int[]{0, 0, 1} : new int[]{0, 1};
+        int[] coordinate = new int[]{0, 1};
         return AccessibilityNodeParser.getNodeByCoordinate(this.getRootInActiveWindow(), coordinate);
     }
 
     private AccessibilityNodeInfo buttonContacts() {
-        int[] coordinate = this.needMask() ? new int[]{0, 0, 2} : new int[]{0, 2};
+        int[] coordinate = new int[]{0, 2};
         return AccessibilityNodeParser.getNodeByCoordinate(this.getRootInActiveWindow(), coordinate);
     }
 
@@ -251,7 +253,12 @@ public class MarketingAccessibilityService extends AccessibilityService {
     }
 
     private AccessibilityNodeInfo buttonMe() {
-        int[] coordinate = this.needMask() ? new int[]{0, 0, 4} : new int[]{0, 4};
+        int[] coordinate = new int[]{0, 4};
+        return AccessibilityNodeParser.getNodeByCoordinate(this.getRootInActiveWindow(), coordinate);
+    }
+
+    private AccessibilityNodeInfo buttonMoments() {
+        int[] coordinate = new int[]{0, 0, 3, 0};
         return AccessibilityNodeParser.getNodeByCoordinate(this.getRootInActiveWindow(), coordinate);
     }
 }
