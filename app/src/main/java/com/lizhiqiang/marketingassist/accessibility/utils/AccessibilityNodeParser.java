@@ -1,6 +1,5 @@
-package com.lizhiqiang.marketingassist.accessibilityservice;
+package com.lizhiqiang.marketingassist.accessibility.utils;
 
-import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import java.util.List;

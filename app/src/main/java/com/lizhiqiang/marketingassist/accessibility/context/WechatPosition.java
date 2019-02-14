@@ -1,4 +1,4 @@
-package com.lizhiqiang.marketingassist.accessibilityservice.context;
+package com.lizhiqiang.marketingassist.accessibility.context;
 
 public enum WechatPosition {
     CHATS,

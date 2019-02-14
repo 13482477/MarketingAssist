@@ -1,4 +1,4 @@
-package com.lizhiqiang.marketingassist.accessibilityservice.model;
+package com.lizhiqiang.marketingassist.accessibility.task;
 
 import android.view.accessibility.AccessibilityEvent;
 

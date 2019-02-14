@@ -1,6 +1,6 @@
-package com.lizhiqiang.marketingassist.accessibilityservice.context;
+package com.lizhiqiang.marketingassist.accessibility.context;
 
-import com.lizhiqiang.marketingassist.accessibilityservice.model.Task;
+import com.lizhiqiang.marketingassist.accessibility.task.Task;
 
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -9,7 +9,9 @@ public class AccessibilityContext {
 
     private static AccessibilityContext context;
 
-    private WechatPosition position;
+    private String app;
+
+    private String position;
 
     private boolean accessibilityEnable = false;
 
@@ -24,11 +26,19 @@ public class AccessibilityContext {
         return context;
     }
 
-    public WechatPosition getPosition() {
+    public String getApp() {
+        return app;
+    }
+
+    public void setApp(String app) {
+        this.app = app;
+    }
+
+    public String getPosition() {
         return position;
     }
 
-    public void setPosition(WechatPosition position) {
+    public void setPosition(String position) {
         this.position = position;
     }
 

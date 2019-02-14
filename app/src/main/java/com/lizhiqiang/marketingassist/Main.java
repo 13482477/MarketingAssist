@@ -8,16 +8,12 @@ import android.os.Message;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lizhiqiang.marketingassist.accessibilityservice.context.AccessibilityContext;
-import com.lizhiqiang.marketingassist.accessibilityservice.model.Task;
-import com.lizhiqiang.marketingassist.accessibilityservice.model.TaskBuilder;
-import com.lizhiqiang.marketingassist.accessibilityservice.model.TaskStep;
-import com.lizhiqiang.marketingassist.accessibilityservice.model.WechatAction;
+import com.lizhiqiang.marketingassist.accessibility.context.AccessibilityContext;
+import com.lizhiqiang.marketingassist.accessibility.task.TaskBuilder;
 
 public class Main extends AppCompatActivity {
 
@@ -31,9 +27,18 @@ public class Main extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_main);
+        this.initTextView();
+        this.initButton();
+
+        new Thread(new AccessibilityStatusWatcher()).start();
+    }
+
+    private void initTextView() {
         this.tvAccessibilityStatus = this.findViewById(R.id.tvAccessibilityStatus);
         this.tvAccessibilityStatus.setText(AccessibilityContext.getInstance().isAccessibilityEnable() ? "是" : "否");
+    }
 
+    private void initButton() {
         this.btnGoConfig = this.findViewById(R.id.buttonGoConfig);
         this.btnSendMoments = this.findViewById(R.id.btnSendMoments);
         this.btnGoConfig.setOnClickListener((v -> {
@@ -57,8 +62,6 @@ public class Main extends AppCompatActivity {
             intent.setComponent(cmp);
             startActivity(intent);
         });
-
-        new Thread(new AccessibilityStatusWatcher()).start();
     }
 
     private class AccessibilityStatusWatcher implements Runnable {

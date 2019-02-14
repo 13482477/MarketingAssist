@@ -1,6 +1,4 @@
-package com.lizhiqiang.marketingassist.accessibilityservice.model;
-
-import android.view.accessibility.AccessibilityEvent;
+package com.lizhiqiang.marketingassist.accessibility.task;
 
 import java.util.HashSet;
 import java.util.Set;

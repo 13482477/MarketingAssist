@@ -1,4 +1,4 @@
-package com.lizhiqiang.marketingassist.accessibilityservice;
+package com.lizhiqiang.marketingassist.accessibility.utils;
 
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -8,9 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class AccessibilityUtils {
 
