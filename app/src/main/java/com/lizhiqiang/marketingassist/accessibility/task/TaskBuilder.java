@@ -1,12 +1,14 @@
 package com.lizhiqiang.marketingassist.accessibility.task;
 
 import android.accessibilityservice.AccessibilityService;
+import android.os.Bundle;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.lizhiqiang.marketingassist.accessibility.locater.WechatLocator;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class TaskBuilder {
 
@@ -36,7 +38,7 @@ public class TaskBuilder {
         step1.setName("进入微信");
         step1.setName("进入微信，如果在微信首页，点击朋友圈，如果不在，则调用全局返回");
         step1.getPackageCriteria().addAll(Arrays.asList("com.tencent.mm"));
-        step1.getEventCriteria().addAll(Arrays.asList(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED,AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED));
+        step1.getEventCriteria().addAll(Arrays.asList(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED, AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED));
         step1.setIndex(1);
         task.getStepQueue().add(step1);
 
@@ -53,10 +55,70 @@ public class TaskBuilder {
         step2.setName("点击朋友圈");
         step2.getPackageCriteria().addAll(Arrays.asList("com.tencent.mm"));
         step2.getEventCriteria().addAll(Arrays.asList(AccessibilityEvent.TYPE_VIEW_CLICKED));
-        step2.setIndex(3);
+        step2.setIndex(2);
         task.getStepQueue().add(step2);
 
+        TaskStep step3 = new TaskStep() {
+            @Override
+            public void doAction(AccessibilityService context, AccessibilityEvent event) {
+                List<AccessibilityNodeInfo> list = context.getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/jy");
+                AccessibilityNodeInfo button = list.get(0);
+                if (button != null) {
+                    button.performAction(AccessibilityNodeInfo.ACTION_LONG_CLICK);
+                }
+            }
+        };
+        step3.setTask(task);
+        step3.setName("长按发送朋友圈按钮");
+        step3.getPackageCriteria().addAll(Arrays.asList("com.tencent.mm"));
+        step3.getEventCriteria().addAll(Arrays.asList(AccessibilityEvent.TYPE_VIEW_CLICKED));
+        step3.setIndex(3);
+        task.getStepQueue().add(step3);
 
+
+        TaskStep step4 = new TaskStep() {
+            @Override
+            public void doAction(AccessibilityService context, AccessibilityEvent event) {
+                List<AccessibilityNodeInfo> list = context.getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/cqx");
+                if (list.size() == 0) {
+                    return;
+                } else {
+                    AccessibilityNodeInfo editView = list.get(0);
+                    editView.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
+
+                    Bundle arguments = new Bundle();
+                    arguments.putCharSequence(AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE, this.getContent());
+                    editView.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments);
+                }
+            }
+        };
+        step4.setTask(task);
+        step4.setName("输入朋友圈内容");
+        step4.getPackageCriteria().addAll(Arrays.asList("com.tencent.mm"));
+        step4.getEventCriteria().addAll(Arrays.asList(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED));
+        step4.setContent("你好你好你好");
+        step4.setIndex(4);
+        task.getStepQueue().add(step4);
+
+
+        TaskStep step5 = new TaskStep() {
+            @Override
+            public void doAction(AccessibilityService context, AccessibilityEvent event) {
+                List<AccessibilityNodeInfo> list = context.getRootInActiveWindow().findAccessibilityNodeInfosByViewId("com.tencent.mm:id/jx");
+                if (list.size() == 0) {
+                    return;
+                } else {
+                    AccessibilityNodeInfo button = list.get(0);
+                    button.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                }
+            }
+        };
+        step5.setTask(task);
+        step5.setName("点击POST");
+        step5.getPackageCriteria().addAll(Arrays.asList("com.tencent.mm"));
+        step5.getEventCriteria().addAll(Arrays.asList(AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED));
+        step5.setIndex(5);
+        task.getStepQueue().add(step5);
 
         TaskStep stepEnd = new TaskStep() {
             @Override
@@ -68,7 +130,7 @@ public class TaskBuilder {
         stepEnd.setName("结束");
         stepEnd.getPackageCriteria().addAll(Arrays.asList("com.tencent.mm"));
         stepEnd.getEventCriteria().addAll(Arrays.asList(AccessibilityEvent.TYPE_VIEW_CLICKED));
-        stepEnd.setIndex(4);
+        stepEnd.setIndex(6);
         task.getStepQueue().add(stepEnd);
 //
 //        TaskStep step4 = new TaskStep();

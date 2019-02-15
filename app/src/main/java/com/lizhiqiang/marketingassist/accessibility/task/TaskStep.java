@@ -20,6 +20,8 @@ public abstract class TaskStep {
 
     private String description;
 
+    private String content;
+
     private boolean continued = false;
 
     public Task getTask() {
@@ -76,6 +78,14 @@ public abstract class TaskStep {
 
     public void setContinued(boolean continued) {
         this.continued = continued;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public abstract void doAction(AccessibilityService context, AccessibilityEvent event);
