@@ -100,7 +100,6 @@ public class TaskBuilder {
         step4.setIndex(4);
         task.getStepQueue().add(step4);
 
-
         TaskStep step5 = new TaskStep() {
             @Override
             public void doAction(AccessibilityService context, AccessibilityEvent event) {
