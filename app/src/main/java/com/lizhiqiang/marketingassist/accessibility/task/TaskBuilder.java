@@ -96,7 +96,7 @@ public class TaskBuilder {
         step4.setName("输入朋友圈内容");
         step4.getPackageCriteria().addAll(Arrays.asList("com.tencent.mm"));
         step4.getEventCriteria().addAll(Arrays.asList(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED));
-        step4.setContent("你好你好你好");
+        step4.setContent("小哥哥，你好帅。。。");
         step4.setIndex(4);
         task.getStepQueue().add(step4);
 
