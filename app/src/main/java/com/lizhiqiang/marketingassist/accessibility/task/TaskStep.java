@@ -16,6 +16,12 @@ public abstract class TaskStep {
 
     private int index;
 
+    private String name;
+
+    private String description;
+
+    private boolean continued = false;
+
     public Task getTask() {
         return task;
     }
@@ -46,6 +52,30 @@ public abstract class TaskStep {
 
     public void setEventCriteria(Set<Integer> eventCriteria) {
         this.eventCriteria = eventCriteria;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isContinued() {
+        return continued;
+    }
+
+    public void setContinued(boolean continued) {
+        this.continued = continued;
     }
 
     public abstract void doAction(AccessibilityService context, AccessibilityEvent event);

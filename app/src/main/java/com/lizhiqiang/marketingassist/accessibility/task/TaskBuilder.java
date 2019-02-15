@@ -17,19 +17,30 @@ public class TaskBuilder {
         TaskStep step1 = new TaskStep() {
             @Override
             public void doAction(AccessibilityService context, AccessibilityEvent event) {
-                AccessibilityNodeInfo button = WechatLocator.buttonDiscover(context);
-                if (button != null) {
-                    button.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                if (!WechatLocator.inChats(context) &&
+                        !WechatLocator.inContacts(context) &&
+                        !WechatLocator.inDiscover(context) &&
+                        !WechatLocator.inMe(context)) {
+                    context.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                    this.setContinued(true);
+                } else {
+                    AccessibilityNodeInfo button = WechatLocator.buttonDiscover(context);
+                    if (button != null) {
+                        button.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    }
+                    this.setContinued(false);
                 }
             }
         };
         step1.setTask(task);
+        step1.setName("进入微信");
+        step1.setName("进入微信，如果在微信首页，点击朋友圈，如果不在，则调用全局返回");
         step1.getPackageCriteria().addAll(Arrays.asList("com.tencent.mm"));
-        step1.getEventCriteria().addAll(Arrays.asList(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED));
+        step1.getEventCriteria().addAll(Arrays.asList(AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED,AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED));
         step1.setIndex(1);
         task.getStepQueue().add(step1);
 
-        TaskStep step2 = new TaskStep(){
+        TaskStep step2 = new TaskStep() {
             @Override
             public void doAction(AccessibilityService context, AccessibilityEvent event) {
                 AccessibilityNodeInfo button = WechatLocator.buttonMoments(context);
@@ -39,22 +50,26 @@ public class TaskBuilder {
             }
         };
         step2.setTask(task);
+        step2.setName("点击朋友圈");
         step2.getPackageCriteria().addAll(Arrays.asList("com.tencent.mm"));
         step2.getEventCriteria().addAll(Arrays.asList(AccessibilityEvent.TYPE_VIEW_CLICKED));
-        step2.setIndex(2);
+        step2.setIndex(3);
         task.getStepQueue().add(step2);
 
-        TaskStep step3 = new TaskStep(){
+
+
+        TaskStep stepEnd = new TaskStep() {
             @Override
             public void doAction(AccessibilityService context, AccessibilityEvent event) {
 
             }
         };
-        step3.setTask(task);
-        step3.getPackageCriteria().addAll(Arrays.asList("com.tencent.mm"));
-        step3.getEventCriteria().addAll(Arrays.asList(AccessibilityEvent.TYPE_VIEW_CLICKED));
-        step3.setIndex(3);
-        task.getStepQueue().add(step3);
+        stepEnd.setTask(task);
+        stepEnd.setName("结束");
+        stepEnd.getPackageCriteria().addAll(Arrays.asList("com.tencent.mm"));
+        stepEnd.getEventCriteria().addAll(Arrays.asList(AccessibilityEvent.TYPE_VIEW_CLICKED));
+        stepEnd.setIndex(4);
+        task.getStepQueue().add(stepEnd);
 //
 //        TaskStep step4 = new TaskStep();
 //        step4.setTask(task);

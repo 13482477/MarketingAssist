@@ -1,18 +1,16 @@
 package com.lizhiqiang.marketingassist.accessibility.service;
 
 import android.accessibilityservice.AccessibilityService;
+import android.content.Intent;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
-import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.lizhiqiang.marketingassist.accessibility.context.AccessibilityContext;
 import com.lizhiqiang.marketingassist.accessibility.context.AppPosition;
 import com.lizhiqiang.marketingassist.accessibility.locater.WechatLocator;
-import com.lizhiqiang.marketingassist.accessibility.utils.AccessibilityNodeParser;
-import com.lizhiqiang.marketingassist.accessibility.utils.AccessibilityUtils;
-import com.lizhiqiang.marketingassist.accessibility.context.AccessibilityContext;
 import com.lizhiqiang.marketingassist.accessibility.task.Task;
 import com.lizhiqiang.marketingassist.accessibility.task.TaskStep;
-import com.lizhiqiang.marketingassist.accessibility.task.WechatAction;
+import com.lizhiqiang.marketingassist.accessibility.utils.AccessibilityUtils;
 
 public class MainAccessibilityService extends AccessibilityService {
 
@@ -25,6 +23,7 @@ public class MainAccessibilityService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         Log.i("position", "position=" + AccessibilityContext.getInstance().getPosition());
+        this.logSomeThing(event);
 
         Task task = AccessibilityContext.getInstance().getTaskQueue().peek();
         if (task == null) {
@@ -45,12 +44,13 @@ public class MainAccessibilityService extends AccessibilityService {
         }
 
         this.locate(event);
-        this.logSomeThing(event);
 
         this.interval();
         step.doAction(this, event);
 
-        task.getStepQueue().poll();
+        if (!step.isContinued()) {
+            task.getStepQueue().poll();
+        }
         if (task.getStepQueue().isEmpty()) {
             AccessibilityContext.getInstance().getTaskQueue().poll();
         }
@@ -58,7 +58,13 @@ public class MainAccessibilityService extends AccessibilityService {
 
     @Override
     public void onInterrupt() {
+
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
         AccessibilityContext.getInstance().setAccessibilityEnable(false);
+        return super.onUnbind(intent);
     }
 
     private void interval() {
